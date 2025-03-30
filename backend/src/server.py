@@ -1,5 +1,7 @@
+import traceback
 from litellm import completion
 from fastapi import FastAPI, Response
+import matplotlib as plt
 
 app = FastAPI()
 
@@ -30,3 +32,28 @@ def root():
 async def get_message(message: str):
     print(message)
     return {"message": get_response(message)}
+
+@app.get("executecode/{code}")
+async def execute_code(code: str, response: Response):
+    # try:
+    #     exec(code)
+    #     return {"message": "Code executed successfully"}
+    # except Exception as e:
+    #     response.status_code = 500
+    #     return {"error": str(e)}
+    try:
+        local_vars = {}
+        exec(code, globals(), local_vars)  # Execute code
+        buffer = io.BytesIO()
+        plt.savefig(buffer, format="png")
+        buffer.seek(0)
+        plt.close()
+        # buffer.getvalue() when we want to return plot as an image, local_vars.get('result', 'No output variable defined')
+        if buffer.getvalue():
+            return Response(content=buffer.getvalue(), media_type="image/png")
+        
+        result = local_vars.get('result', 'No output variable defined')
+        return {"result": result}
+    except Exception as e:
+        response.status_code = 500
+        return {"error": traceback.format_exc()}
