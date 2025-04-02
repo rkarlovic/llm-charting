@@ -2,7 +2,7 @@ import io
 import traceback
 from litellm import completion
 from fastapi import FastAPI, Response
-import matplotlib as plt
+import matplotlib.pyplot as plt
 from . import schema, model_user
 from .database import engine, get_db
 
@@ -23,7 +23,9 @@ def get_response(message):
         message.insert(0, system_message)
     
     response = completion(
-        model="ollama/llama3.2:1b",
+        # model="ollama/llama3.2:1b"
+        model="ollama/qwen2.5-coder:7b",
+        # model="ollama/llama3.1",
         messages= message,
         api_base="http://localhost:11434",
     )
@@ -50,8 +52,15 @@ async def get_message(message: str):
 @app.get("/executecode/{code}")
 async def execute_code(code: str, response: Response):
     try:
+        # print("Executing code...")
+        # print(code)
+        # print("Executing code...")
         local_vars = {}
-        exec(extract_code_block(code), globals(), local_vars)  # Execute code
+        clean_code = extract_code_block(code).replace("\\n", "\n")
+        print("Clean code:")
+        print(clean_code)
+        print("Clean code:")
+        exec(clean_code, globals(), local_vars)  # Execute code
         buffer = io.BytesIO()
         plt.savefig(buffer, format="png")
         buffer.seek(0)
