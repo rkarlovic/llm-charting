@@ -5,3 +5,4 @@ class User(BaseModel):
     firstname: str
     lastname: str
     email: str
+    password: str

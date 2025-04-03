@@ -1,7 +1,8 @@
 import io
 import traceback
 from litellm import completion
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Response, status, Depends
+from sqlalchemy.orm import Session
 import matplotlib.pyplot as plt
 from . import schema, model_user
 from .database import engine, get_db
@@ -74,3 +75,16 @@ async def execute_code(code: str, response: Response):
     except Exception as e:
         response.status_code = 500
         return {"error": traceback.format_exc()}
+
+@app.post("/register/", status_code=status.HTTP_201_CREATED)
+async def register_user(user: schema.User, db: Session = Depends(get_db)):
+    # should we encrypt password here? or in the frontend?
+    # hashed_password = utils.hash(user.password)
+    # user.password = hashed_password
+
+    new_user = model_user.User(**user.dict())
+    db.add(new_user)
+    db.commit()
+    db.refresh(new_user)
+    # should we return the user object? or just boolean?
+    return new_user
