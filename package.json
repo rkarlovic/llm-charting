@@ -1,0 +1,16 @@
+{
+  "name": "llm-charting",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "react-router-dom": "^7.4.1"
+  },
+  "devDependencies": {
+    "vite": "^6.2.5"
+  }
+}

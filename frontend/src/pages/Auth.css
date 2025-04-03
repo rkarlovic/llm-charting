@@ -10,7 +10,7 @@
 }
 
 .auth-box{
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(116, 21, 21, 0);
     padding: 2rem;
     border-radius: 1rem;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -40,6 +40,21 @@
     transition: background-color 0.3s ease;
 }
 
+.logos-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.logo{
+    width: auto;
+    height: 50px;
+    object-fit: contain;
+    display: block;
+    filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
+}
+
 .title{
     font-size: 2rem;
     text-align: center;
@@ -57,9 +72,9 @@
 .checkbox-container {
     display: flex;
     align-items: center;
-    gap: 10px;
     margin-top: 1rem;
     position: relative;
+    padding-left: 30px;
     cursor: pointer;
     font-size: 14px;
     user-select: none;
@@ -71,28 +86,34 @@
   }
   
   .custom-checkmark {
-    flex-shrink: 0;
+    position: absolute;
+    left: 0;
+    top: 0;
     height: 20px;
     width: 20px;
     background-color: #CED4DA;
     border: 2px solid #6DD0F6;
     border-radius: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   
   .checkbox-container input:checked ~ .custom-checkmark:after {
     content: "";
-    position: absolute;
-    left: 5px;
-    top: 1px;
     width: 6px;
     height: 12px;
     border: solid #444444;
     border-width: 0 2px 2px 0;
     transform: rotate(45deg);
+    display: block;
   }
   
   .checkbox-label {
     margin-left: 10px;
+    line-height: 20px;
+    display: inline-block;
+    vertical-align: middle;
   }
   
   .register-button {
@@ -116,7 +137,19 @@
     opacity: 1;
     cursor: pointer;
   }
+
+  .terms-link{
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    transition: color 0.3s ease;
+  }
   
+  .terms-link:hover{
+    text-decoration: underline;
+    color: #6DD0F6
+  }
+
 @media (max-width: 600px) {
   .auth-box {
     padding: 1rem;

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import './Auth.css';
 
 const Register = () => {
@@ -7,6 +8,13 @@ const Register = () => {
   return (
     <div className="auth-container">
         <div className="auth-box">
+            <div className="logos-wrapper">
+                <img
+            className="logo"
+            src="/puni-logo.png"
+            alt="Sveučilište Jurja Dobrile u Puli, Fakultet informatike"
+                />
+            </div>
             <h1 className="title">Jur.ai</h1>
             <h2 className="subtitle">Registracija</h2>
             <input type="text" placeholder="ime" />
@@ -21,9 +29,11 @@ const Register = () => {
                 onChange={() => setTermsAccepted(!termsAccepted)} 
                 />
                 <span className="custom-checkmark"></span>
-                <span className="checkbox-label">
-                Prihvaćam Jur.ai <b>Uvjete korištenja</b>
-                </span>
+                    <span className="checkbox-label">Prihvaćam Jur.ai {' '}
+                    <Link to="/terms" 
+                    className="terms-link"><b>uvjete korištenja</b>
+                    </Link>
+                    </span>
             </label>
 
             <button disabled = {!termsAccepted} className={`register-button ${termsAccepted ? 'active' : 'disabled'}`}>Registracija</button>
