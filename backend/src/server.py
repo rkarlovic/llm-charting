@@ -88,3 +88,47 @@ async def register_user(user: schema.User, db: Session = Depends(get_db)):
     db.refresh(new_user)
     # should we return the user object? or just boolean?
     return new_user
+
+@app.get("/login/{email}/{password}")
+async def login_user(email: str, password: str, db: Session = Depends(get_db)):
+    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    if not user:
+        return {"error": "User not found"}
+    
+    if user.password != password:
+        return {"error": "Invalid password"}
+    
+    return {"message": "Login successful", "user": user}
+
+@app.post("/changepassword/{email}{password}")
+async def change_password(email: str, password: str, db: Session = Depends(get_db)):
+    # should we encrypt password here? or in the frontend?
+    # hashed_password = utils.hash(user.password)
+    # user.password = hashed_password
+
+    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    if not user:
+        return {"error": "User not found"}
+    
+    user.password = password
+    db.commit()
+    db.refresh(user)
+    return user
+
+@app.delete("/delete/{email}")
+async def delete_user(email: str, db: Session = Depends(get_db)):
+    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    if not user:
+        return {"error": "User not found"}
+    
+    db.delete(user)
+    db.commit()
+    return {"message": "User deleted successfully"}
+
+@app.get("/getuser/{email}")
+async def get_user(email: str, db: Session = Depends(get_db)):
+    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    if not user:
+        return {"error": "User not found"}
+    
+    return user
