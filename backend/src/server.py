@@ -4,10 +4,10 @@ from litellm import completion
 from fastapi import FastAPI, Response, status, Depends
 from sqlalchemy.orm import Session
 import matplotlib.pyplot as plt
-from . import schema, model_user
+from . import schema, model
 from .database import engine, get_db
 
-model_user.Base.metadata.create_all(bind=engine)
+model.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -82,7 +82,7 @@ async def register_user(user: schema.User, db: Session = Depends(get_db)):
     # hashed_password = utils.hash(user.password)
     # user.password = hashed_password
 
-    new_user = model_user.User(**user.dict())
+    new_user = model.User(**user.dict())
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
@@ -91,7 +91,7 @@ async def register_user(user: schema.User, db: Session = Depends(get_db)):
 
 @app.get("/login/{email}/{password}")
 async def login_user(email: str, password: str, db: Session = Depends(get_db)):
-    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    user = db.query(model.User).filter(model.User.email == email).first()
     if not user:
         return {"error": "User not found"}
     
@@ -100,13 +100,13 @@ async def login_user(email: str, password: str, db: Session = Depends(get_db)):
     
     return {"message": "Login successful", "user": user}
 
-@app.post("/changepassword/{email}{password}")
+@app.post("/changepassword/{email}/{password}")
 async def change_password(email: str, password: str, db: Session = Depends(get_db)):
     # should we encrypt password here? or in the frontend?
     # hashed_password = utils.hash(user.password)
     # user.password = hashed_password
 
-    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    user = db.query(model.User).filter(model.User.email == email).first()
     if not user:
         return {"error": "User not found"}
     
@@ -117,7 +117,7 @@ async def change_password(email: str, password: str, db: Session = Depends(get_d
 
 @app.delete("/delete/{email}")
 async def delete_user(email: str, db: Session = Depends(get_db)):
-    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    user = db.query(model.User).filter(model.User.email == email).first()
     if not user:
         return {"error": "User not found"}
     
@@ -127,7 +127,7 @@ async def delete_user(email: str, db: Session = Depends(get_db)):
 
 @app.get("/getuser/{email}")
 async def get_user(email: str, db: Session = Depends(get_db)):
-    user = db.query(model_user.User).filter(model_user.User.email == email).first()
+    user = db.query(model.User).filter(model.User.email == email).first()
     if not user:
         return {"error": "User not found"}
     
